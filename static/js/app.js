@@ -16,12 +16,6 @@ function buildMetadata(input_val) {
     }
   );
 }
-  //   // // Use the first sample from the list to build the initial plots
-  //   // const firstSample = sampleNames[0];
-  //   // buildCharts(firstSample);
-  //   // buildMetadata(firstSample);
-  // });
-
 
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
@@ -30,48 +24,62 @@ function buildMetadata(input_val) {
     // buildGauge(data.WFREQ);
 
 
-// function buildCharts(sample) {
+function buildCharts(sample) {
+  var selector2 = d3.select("#pie").html("")
 
-//   // @TODO: Use `d3.json` to fetch the sample data for the plots
-//   var sampleData = d3.json(`/samples/<sample>`);
+  // @TODO: Use `d3.json` to fetch the sample data for the plots
+  d3.json(`/samples/${sample}`).then(
+    (sampleData) => {
+      var xBub = Object.values(sampleData)[0];
+      var yBub = Object.values(sampleData)[2];
+      var labelBub = Object.values(sampleData)[1];
 
-//   // @TODO: Build a Bubble Chart using the sample data
-//   var bubtrace = [
-//     {
-//       x : data.otu_ids,
-//       y : data.sample_values,
-//       text: data.otu_labels,
-//       mode : 'markers',
-//       marker : {
-//           color : [120, 125, 130, 135, 140, 145],
-//           size : data.sample_values
-//       }
-//     }
-//   ];
+      var labelsPie = Object.values(sampleData)[0].slice(0,11);
+      var valuesPie = Object.values(sampleData)[2].slice(0,11);
+        
+      var bubtrace = [
+        {
+          x : xBub,
+          y : yBub,
+          text: labelBub,
+          mode : 'markers',
+          marker : {
+              color : [120, 125, 130, 135, 140, 145],
+              size : yBub
+          }
+        }
+      ];
 
-//   var layout1 = {
-//     title: 'Germ Frequency'
-//   };
-  
-//   Plotly.newPlot('bubble', bubtrace, layout1);
+      var bubLayout = {
+        title: 'Germ Frequency'
+      };
 
-//   // @TODO: Build a Pie Chart
-//   var pietrace = [{
-//     values: data.sample_values,
-//     labels: data.otu_labels,
-//     type: 'pie'
-//   }];
-  
-//   var layout2 = {
-//     height: 400,
-//     width: 500
-//   };
-  
-//   Plotly.newPlot('pie', pietrace, layout2);
+      var pietrace = [{
+        values: valuesPie,
+        labels: labelsPie,
+        type: 'pie'
+      }];
+
+      // var layout2 = {
+      //   height: 400,
+      //   width: 500
+      // };
+
+      // @TODO: Build a Bubble Chart using the sample data
+      Plotly.newPlot('bubble', bubtrace, bubLayout);
+
+      Plotly.newPlot('pie', pietrace);
+    }
+  );
+
+  // @TODO: Build a Pie Chart
+
+}
+
 
 //     // HINT: You will need to use slice() to grab the top 10 sample_values,
 //     // otu_ids, and labels (10 each).
-// }
+
 
 function init() {
   // Grab a reference to the dropdown select element
@@ -88,14 +96,14 @@ function init() {
 
     // Use the first sample from the list to build the initial plots
     const firstSample = sampleNames[0];
-    // buildCharts(firstSample);
+    buildCharts(firstSample);
     buildMetadata(firstSample);
   });
 }
 
 function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
-  // buildCharts(newSample);
+  buildCharts(newSample);
   buildMetadata(newSample);
 }
 
