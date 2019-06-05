@@ -1,7 +1,6 @@
+// Build MetaData Panel
 function buildMetadata(input_val) {
 
-  // @TODO: Complete the following function that builds the metadata panel
-  
   // Use `.html("") to clear any existing metadata
   var selector = d3.select("#sample-metadata").html("").append("ul");
 
@@ -17,17 +16,11 @@ function buildMetadata(input_val) {
   );
 }
 
-    // Hint: Inside the loop, you will need to use d3 to append new
-    // tags for each key-value in the metadata.
 
-    // BONUS: Build the Gauge Chart
-    // buildGauge(data.WFREQ);
-
-
+// Buiild Pie Chart
 function buildCharts(sample) {
   var selector2 = d3.select("#pie").html("")
 
-  // @TODO: Use `d3.json` to fetch the sample data for the plots
   d3.json(`/samples/${sample}`).then(
     (sampleData) => {
       var xBub = Object.values(sampleData)[0];
@@ -60,32 +53,19 @@ function buildCharts(sample) {
         type: 'pie'
       }];
 
-      // var layout2 = {
-      //   height: 400,
-      //   width: 500
-      // };
-
-      // @TODO: Build a Bubble Chart using the sample data
+      //Build a Bubble Chart
       Plotly.newPlot('bubble', bubtrace, bubLayout);
 
       Plotly.newPlot('pie', pietrace);
     }
   );
 
-  // @TODO: Build a Pie Chart
-
 }
 
-
-//     // HINT: You will need to use slice() to grab the top 10 sample_values,
-//     // otu_ids, and labels (10 each).
-
-
+// Sample dropdown
 function init() {
-  // Grab a reference to the dropdown select element
   var selector = d3.select("#selDataset");
 
-  // Use the list of sample names to populate the select options
   d3.json("/names").then((sampleNames) => {
     sampleNames.forEach((sample) => {
       selector
@@ -101,11 +81,11 @@ function init() {
   });
 }
 
+// Rechart based on sample selected
 function optionChanged(newSample) {
-  // Fetch new data each time a new sample is selected
   buildCharts(newSample);
   buildMetadata(newSample);
 }
 
-// Initialize the dashboard
+// Initialize dashboard
 init();
